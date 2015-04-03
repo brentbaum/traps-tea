@@ -1,7 +1,7 @@
 from stibble import stibble
 from draw import draw_lines
 from PIL import Image, ImageDraw
-from tsp import nearestNeighbor, mst
+from tsp import nearestNeighbor, just_solve_it
 import sys
 import time
 
@@ -16,9 +16,9 @@ def make_art(filename, n_points):
     img = resize(img)
 
     points = stibble(img, n_points)
-    ordered = nearestNeighbor(points)
-
-    out = draw_lines(ordered, img)
+    tour = just_solve_it(points)
+    
+    out = draw_lines(tour, img)
     out.show()
 
 if __name__ == "__main__":

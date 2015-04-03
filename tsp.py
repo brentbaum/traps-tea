@@ -2,6 +2,7 @@ import math
 import sys
 import stibble
 import heapq
+import time
 
 def readFromFile():
 	text_file = open("test.txt", "r")
@@ -25,13 +26,44 @@ def tour_length(points):
                 dist += distance(points[i], points[(i + 1) % len(points)])
         return dist
 
-def mst(pointList):
-	segments = []
-	for i in range(len(pointList)):
-		for j in range(i+1, len(pointList)):
-			#segments is a list of a 3-ple: (point1, point2, distance)
-			segments += [(pointList[i], pointList[j], distance(pointList[i], pointList[j]))]
-	sortedSegments = sorted(segments, key=lambda each:each[2])
+def connects(edge, mst):
+    source, dest, _ = edge
+
+    for s, d, _ in mst:
+        if source == s or source == d or \
+           dest == s or dest == d:
+            return True
+
+    return False
+
+def min_connecting_edge(mst, edges):
+    min_edge = None
+    for edge in edges:
+           if connects(edge, mst) \
+              and (not min_edge or edge[2] < min_edge[2]):
+            min_edge = edge
+    return min_edge
+
+def mst_tour(points):
+        mst = []
+        edges = []
+        print_time()
+        for v in points:
+                for w in points:
+                        if v is not w:
+                                edges.append((v, w, distance(v, w)))
+        print_time()
+
+        if not edges:
+                return mst
+
+        mst = [edges.pop()]
+
+        while len(mst) < len(points) - 1:
+                min_edge = min_connecting_edge(mst, edges)
+                edges.remove(min_edge)
+                mst.append(min_edge)
+        print_time()
 
 def nearestNeighbor(pointList):
 	uList = [pointList[0]]
