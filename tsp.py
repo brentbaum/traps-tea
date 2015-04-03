@@ -94,9 +94,8 @@ def twoOptSwap(pointList):
 
 def main(pointList):	
 	nearestNeighborOrder = nearestNeighbor(pointList)
-	optSwapTour = twoOptSwap(nearestNeighborOrder)
-	print optSwapTour
-	
+	#optSwapTour = twoOptSwap(nearestNeighborOrder)
+	#print optSwapTour	
 	#clarkWrightOrder = clarkWright(pointList)
 
 
