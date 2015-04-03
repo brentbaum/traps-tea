@@ -4,6 +4,7 @@ import stibble
 import heapq
 import time
 
+
 def readFromFile():
 	text_file = open("test.txt", "r")
 	lines = text_file.read().split('\n')
@@ -18,7 +19,7 @@ def readFromFile():
 	return pointList
 
 def distance(p1, p2):
-	return math.sqrt((p1[0]-p2[0])*(p1[0]-p2[0]) + (p1[1]-p2[1])*(p1[1]-p2[1]))
+	return (p1[0]-p2[0])*(p1[0]-p2[0]) + (p1[1]-p2[1])*(p1[1]-p2[1])
 
 def tour_length(points):
         dist = 0
@@ -79,11 +80,61 @@ def nearestNeighbor(pointList):
 				addV = each
 		uList += [addV]
 		vList.remove(addV)
-        print(tour_length(uList))
 	return uList	
 
 def clarkWright(pointList):
 	return pointList	
+
+def calc_intersect(line1, line2):
+	if line1[0][0] == line1[1][0] or line2[0][0] == line2[1][0]:
+		return False
+	slope1 = (line1[0][1] - line1[1][1]) / (line1[0][0] - line1[1][0]) 
+	slope2 = (line2[0][1] - line2[1][1]) / (line2[0][0] - line2[1][0]) 
+	if slope1 == slope2:
+		return False
+	b1 = line1[0][1] - (slope1 * line1[0][0])
+	b2 = line2[0][1] - (slope2 * line2[0][0])
+	x_int = (b2 - b1) / (slope1 - slope2)
+	if (line1[0][0] < x_int and x_int < line1[1][0]) or (line1[1][0] < x_int and x_int < line1[0][0]):
+		return True
+	return False
+
+
+def swap_intersect(point_list):
+	tour = point_list
+	curr_dist = distance(tour[0], tour[len(tour)-1])
+	for i in range(len(tour)-1):
+		curr_dist += distance(tour[i], tour[i+1])
+	print "initial: " + str(curr_dist)
+	changed = True
+	for times in range(50):
+	#while(changed):
+		changed = False
+		for i in range(len(tour)-1):
+			for k in range(i+2, len(tour)-1):
+				line1 = (tour[i], tour[i+1])
+				line2 = (tour[k], tour[k+1])
+				
+				if calc_intersect(line1, line2):
+					segment = tour[i+1:k+1]
+					segment.reverse() 
+					new_tour = tour[:i+1] + segment + tour[k+1:]
+
+					subtract_dist = distance(tour[i], tour[i+1]) + distance(tour[k], tour[k+1])
+					add_dist = distance(tour[i], tour[k]) + distance(tour[i+1], tour[k+1])
+					
+					new_dist = curr_dist - subtract_dist + add_dist
+					if new_dist < curr_dist:
+						tour = new_tour
+						curr_dist = new_dist
+						print curr_dist
+						changed = True
+						break
+			if changed:
+				break
+	print "final: " + str(curr_dist)
+	return tour 
+
 
 def twoOptSwap(pointList):
 	tour = pointList
@@ -91,28 +142,33 @@ def twoOptSwap(pointList):
 	for i in range(len(tour)-1):
 		currDist += distance(tour[i], tour[i+1])
 	changed = True
-	while(changed):
+	for times in range(50):
+	#while(changed):
 		changed = False
-		for i in range(len(tour)-1):
-			pointA1 = tour[i]
-			pointA2 = tour[i+1]
-			for k in range(i+1, len(tour)-1):
-				pointB1 = tour[k]
-				pointB2 = tour[k+1]
-				originalLength = distance(pointA1, pointA2) + distance(pointB1, pointB2) 
-				testLength = distance(pointA1, pointB2) + distance(pointA2, pointB1)
-				if testLength < originalLength:
-					currDist = currDist - originalLength + testLength 
+		for i in range(len(tour)):
+			for k in range(i+1, len(tour)):
+				segment = tour[i:k+1]
+				segment.reverse()
+				new_tour = tour[:i] + segment + tour[k+1:]
+				new_dist = distance(new_tour[0], new_tour[len(new_tour)-1])
+				for index in range(len(new_tour)-1):
+					new_dist += distance(new_tour[index], new_tour[index+1]) 
+				if new_dist < currDist: 
+					currDist = new_dist
+					tour = new_tour
 					print currDist
-					tour = tour[:i+1] + [tour[k+1]] + tour[i+2:k+1] + [tour[i+1]] + tour[k+2:]
-
 					changed = True
 					break
+			if changed:
+				break
+	print "final: " + str(currDist)
+	return tour
+
 
 def main(pointList):	
 	nearestNeighborOrder = nearestNeighbor(pointList)
-	#optSwapTour = twoOptSwap(nearestNeighborOrder)
-	#print optSwapTour	
+	optSwapTour = twoOptSwap(nearestNeighborOrder)
+	print optSwapTour	
 	#clarkWrightOrder = clarkWright(pointList)
 
 
