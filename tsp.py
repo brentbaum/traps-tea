@@ -1,5 +1,5 @@
 import math
-import stibble.py
+import stibble
 
 def readFromFile():
 	text_file = open("test.txt", "r")
