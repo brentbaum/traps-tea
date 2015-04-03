@@ -1,4 +1,5 @@
 import math
+import sys
 import stibble
 import heapq
 
@@ -70,7 +71,9 @@ def twoOptSwap(pointList):
 				testLength = distance(pointA1, pointB2) + distance(pointA2, pointB1)
 				if testLength < originalLength:
 					currDist = currDist - originalLength + testLength 
-					print currDist	
+					print currDist
+					tour = tour[:i+1] + [tour[k+1]] + tour[i+2:k+1] + [tour[i+1]] + tour[k+2:]
+
 					changed = True
 					break
 
