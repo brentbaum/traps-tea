@@ -71,7 +71,6 @@ def makePoints(tour):
 	return pointList
 
 def twoOptSwap(pointList):
-	#tour = makeTour(pointList)
 	tour = pointList
 	currDist = distance(tour[0], tour[len(tour)-1])
 	for i in range(len(tour)-1):
@@ -85,33 +84,18 @@ def twoOptSwap(pointList):
 			for k in range(i+1, len(tour)-1):
 				pointB1 = tour[k]
 				pointB2 = tour[k+1]
-				
 				originalLength = distance(pointA1, pointA2) + distance(pointB1, pointB2) 
-				#test
-
-
-
-				testLength1 = distance(elem1[0], elem2[1])
-				testLength2 = distance(elem1[1], elem2[0])
-				if testLength1+testLength2 < originalLength:
-					newDist = currDist - elem1[2] - elem2[2] + testLength1 + testLength2
-					print currDist
-					tour += [(elem1[0], elem2[1], testLength1)]
-					tour += [(elem1[1], elem2[0], testLength2)]
-					tour.remove(elem2)
-					tour.remove(elem1)
+				testLength = distance(pointA1, pointB2) + distance(pointA2, pointB1)
+				if testLength < originalLength:
+					currDist = currDist - originalLength + testLength 
+					print currDist	
 					changed = True
 					break
 
 def main(pointList):	
-	#pointList = readFromFile()
-	#mstOrder = mst(pointList)
 	nearestNeighborOrder = nearestNeighbor(pointList)
-	#nnTour = makeTour(nearestNeighborOrder)
-	#print sum(map(lambda a: a[2], nnTour))	 
-	
-	#optSwapTour = twoOptSwap(nearestNeighborOrder)
-	#print optSwapTour
+	optSwapTour = twoOptSwap(nearestNeighborOrder)
+	print optSwapTour
 	
 	#clarkWrightOrder = clarkWright(pointList)
 
