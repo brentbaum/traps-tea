@@ -1,5 +1,6 @@
 import math
 import stibble
+import heapq
 
 def readFromFile():
 	text_file = open("test.txt", "r")
@@ -16,6 +17,12 @@ def readFromFile():
 
 def distance(p1, p2):
 	return math.sqrt((p1[0]-p2[0])*(p1[0]-p2[0]) + (p1[1]-p2[1])*(p1[1]-p2[1]))
+
+def tour_length(points):
+        dist = 0
+        for i in range(len(points)):
+                dist += distance(points[i], points[(i + 1) % len(points)])
+        return dist
 
 def mst(pointList):
 	segments = []
@@ -39,36 +46,11 @@ def nearestNeighbor(pointList):
 				addV = each
 		uList += [addV]
 		vList.remove(addV)
+        print(tour_length(uList))
 	return uList	
 
 def clarkWright(pointList):
 	return pointList	
-
-
-def makeTour(pointList):
-	tour = []
-	for i in range(len(pointList)-1):
-		tour += [(pointList[i], pointList[i+1], distance(pointList[i], pointList[i+1]))]
-	tour += [(pointList[len(pointList)-1], pointList[0], distance(pointList[0], pointList[len(pointList)-1]))]
-	return tour
-
-def makePoints(tour):
-	orderedTour = [tour[0]]
-	tour = tour[1:]
-	while len(tour) != 0:
-		lastPoint = orderedTour[len(orderedTour)-1][1]
-		nextAdd = tour[0]
-		for each in tour:
-			if each[0] == lastPoint:
-				orderedTour += [each]
-				nextAdd = each
-			elif each[1] == lastPoint:
-				orderedTour += [(each[1], each[0], each[2])]
-				nextAdd = each
-		tour.remove(nextAdd)
-	pointList = map(lambda x: x[0], orderedTour) 
-	pointList += [orderedTour[len(orderedTour)-1][1]]
-	return pointList
 
 def twoOptSwap(pointList):
 	tour = pointList
