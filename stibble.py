@@ -4,8 +4,6 @@ import sys
 from random import random, choice
 import math
 
-N_POINTS = 2500
-
 def draw(positions, out):
     draw = ImageDraw.Draw(out)
 
@@ -32,13 +30,13 @@ def weighted_histogram(img):
         whist.append(((lower, upper), hist[i]))
     return whist
 
-def stibble(img):
+def stibble(img, n_points, should_draw=False):
     positions = list()
 
     hist = weighted_histogram(img)
     upper = hist[-1][0][1]
 
-    for p in range(0, N_POINTS):
+    for p in range(0, n_points):
         X = math.floor(random() * upper)
         b = next(bin for bin in hist if X >= bin[0][0] and X <= bin[0][1])[1]
         positions.append(choice(b))
@@ -50,8 +48,9 @@ def stibble(img):
 
 if __name__ == "__main__":
     if len(sys.argv) is 3:
-        N_POINTS = int(sys.argv[2])
-        img = Image.open(sys.argv[1]).convert('LA')
-        stibble(img)
+        n_points = int(sys.argv[2])
+        filename = sys.argv[1]
+        img = Image.open(filename).convert('LA')
+        stibble(img, n_points)
     else:
         print "Incorrect number of arguments."
