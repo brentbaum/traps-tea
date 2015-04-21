@@ -26,44 +26,73 @@ def tour_length(points):
                 dist += distance(points[i], points[(i + 1) % len(points)])
         return dist
 
-def connects(edge, mst):
-    source, dest, _ = edge
+def connects_to_unknown(edge, mst, known):
+    s, d, _ = edge
 
-    for s, d, _ in mst:
-        if source == s or source == d or \
-           dest == s or dest == d:
+    if s in known and d not in known\
+       or d in known and s not in known:
             return True
 
     return False
 
-def min_connecting_edge(mst, edges):
+def min_connecting_edge(mst, edges, known):
     min_edge = None
     for edge in edges:
-           if connects(edge, mst) \
+           if connects_to_unknown(edge, mst, known) \
               and (not min_edge or edge[2] < min_edge[2]):
             min_edge = edge
     return min_edge
 
+def adjacent(mst, p):
+        adj_list = []
+        for (p1, p2, d) in mst:
+                if(p1 == p):
+                        adj_list.append((p2, d))
+                elif(p2 == p):
+                        adj_list.append((p1, d))
+        return adj_list
+
+def ham_path(mst):
+        path = [mst[0][0], mst[0][1]]
+        index = -1
+        last = path[-1]
+        while(len(path) < len(mst)):
+                adj = adjacent(mst, last)
+                adj = sorted([node for node in adj if node[0] not in path], key=lambda node: node[1])
+                if(len(adj) > 0):
+                        path.append(adj[0][0])
+                        index = -1
+                else:
+                        index -= 1
+
+                last = path[index]
+
+        path.append(path[0])
+        return path
+
 def mst_tour(points):
         mst = []
+        known = {}
         edges = []
-        print_time()
         for v in points:
                 for w in points:
                         if v is not w:
                                 edges.append((v, w, distance(v, w)))
-        print_time()
 
-        if not edges:
-                return mst
+        edges.sort(key=lambda e: e[2], reverse=True)
 
         mst = [edges.pop()]
-
+        known = set()
+        known.add(mst[0][0])
+        known.add(mst[0][1])
         while len(mst) < len(points) - 1:
-                min_edge = min_connecting_edge(mst, edges)
+                min_edge = min_connecting_edge(mst, edges, known)
                 edges.remove(min_edge)
                 mst.append(min_edge)
-        print_time()
+                known.add(min_edge[0])
+                known.add(min_edge[1])
+
+        return ham_path(mst)
 
 def nearestNeighbor(pointList):
 	uList = [pointList[0]]
@@ -79,7 +108,6 @@ def nearestNeighbor(pointList):
 				addV = each
 		uList += [addV]
 		vList.remove(addV)
-        print(tour_length(uList))
 	return uList	
 
 def clarkWright(pointList):
