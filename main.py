@@ -32,18 +32,18 @@ def make_art(filename, n_points):
        
     print("Saving....")	
     out = draw_lines(ordered, img)
-    out.save("nn.png")
+    out.save("out/nn.png")
     #out2 = draw_lines(twoopt_ordered, img)
-    #out2.save("twooptout.png")
+    #out2.save("out/twooptout.png")
     out3 = draw_lines(swap_ordered, img)
-    out3.save("swapopt.png")
+    out3.save("out/swapopt.png")
     #out4 = draw_lines(tour, img)
     #out4.save("justsolveit.png")
     
     out5 = draw_mst(mst, img)
-    out5.save("mst.png")
+    out5.save("out/mst.png")
     out6 = draw_lines(tour, img)
-    out6.save("mst_path.png")
+    out6.save("out/mst_path.png")
 	 
     print("Done!")
     print("nn.png: nearest neighbor, no optimizations")
