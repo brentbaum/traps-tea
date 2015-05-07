@@ -6,7 +6,7 @@ import math
 
 
 def histogram(img):
-    hist = map(lambda l: [], range(256))
+    hist = list(map(lambda l: [], range(256)))
     for x in range(img.size[0]):
         for y in range(img.size[1]):
             hist[img.getpixel((x, y))[0]].append((x, y))

@@ -3,6 +3,15 @@ from PIL import Image, ImageDraw
 import sys
 
 
+def draw_mst(mst, img):
+    out = img.point(lambda i: 255)
+    d = ImageDraw.Draw(out)
+
+    for i in range(len(mst)):
+        d.line([mst[i][0], mst[i][1]], fill=128)
+    del d
+    return out
+
 def draw_lines(points, img):
     out = img.point(lambda i: 255)
     d = ImageDraw.Draw(out)

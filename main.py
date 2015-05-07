@@ -1,7 +1,7 @@
 from stibble import stibble
-from draw import draw_lines
+from draw import draw_lines, draw_mst
 from PIL import Image, ImageDraw
-from tsp import nearestNeighbor, twoOptSwap, swap_intersect, mst_tour#, just_solve_it
+from tsp import nearestNeighbor, twoOptSwap, swap_intersect, mst_to_path, mst_tour_2, advancedNearestNeighbor#, just_solve_it
 import sys
 import time
 
@@ -14,28 +14,41 @@ def resize(img):
 
 def make_art(filename, n_points):
     img = Image.open(filename).convert('LA')
-    img = resize(img)
-
+    #img = resize(img)
+    
+    print("Stippling....")
     points = stibble(img, n_points)
-    #tour = mst_tour(points)
-    #tour = just_solve_it(points)
+    print("Nearest Neighbor....")
     ordered = nearestNeighbor(points)
-
-    twoopt_ordered = twoOptSwap(ordered)
-    swap_ordered = swap_intersect(ordered)
+    print("MST....")
+    mst = mst_tour_2(points)
+    print("Converting to tour....")
+    tour = mst_to_path(mst)
+    print("Swap Intersects....")
+    swap_ordered = swap_intersect(tour[:len(tour)-1])
     
     ordered += [ordered[0]] 
-    twoopt_ordered += [twoopt_ordered[0]]
     swap_ordered += [swap_ordered[0]]
-	
+       
+    print("Saving....")	
     out = draw_lines(ordered, img)
-    out.save("output.png")
-    out2 = draw_lines(twoopt_ordered, img)
-    out2.save("twooptout.png")
+    out.save("nn.png")
+    #out2 = draw_lines(twoopt_ordered, img)
+    #out2.save("twooptout.png")
     out3 = draw_lines(swap_ordered, img)
-    out3.save("swapout.png")
+    out3.save("swapopt.png")
     #out4 = draw_lines(tour, img)
     #out4.save("justsolveit.png")
+    
+    out5 = draw_mst(mst, img)
+    out5.save("mst.png")
+    out6 = draw_lines(tour, img)
+    out6.save("mst_path.png")
+	 
+    print("Done!")
+    print("nn.png: nearest neighbor, no optimizations")
+    print("mst_path.png: mst to path, no optimizations")
+    print("swapopt.png: mst to path, intersection optimization run")
 
 if __name__ == "__main__":
     n_points = int(sys.argv[2])
