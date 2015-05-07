@@ -15,6 +15,8 @@ def resize(img):
 def make_art(filename, n_points):
     img = Image.open(filename).convert('LA')
     #img = resize(img)
+	
+    file_suffix = str(n_points) + ".png"
     
     print("Stippling....")
     points = stibble(img, n_points)
@@ -22,6 +24,8 @@ def make_art(filename, n_points):
     ordered = nearestNeighbor(points)
     print("MST....")
     mst = mst_tour_2(points)
+    out5 = draw_mst(mst, img)
+    out5.save("mst" + file_suffix)
     print("Converting to tour....")
     tour = mst_to_path(mst)
     print("Swap Intersects....")
@@ -32,21 +36,20 @@ def make_art(filename, n_points):
        
     print("Saving....")	
     out = draw_lines(ordered, img)
-    out.save("out/nn.png")
+    out.save("out/nn"+file_suffix)
     #out2 = draw_lines(twoopt_ordered, img)
     #out2.save("out/twooptout.png")
     out3 = draw_lines(swap_ordered, img)
-    out3.save("out/swapopt.png")
+    out3.save("out/swapopt"+file_suffix)
     #out4 = draw_lines(tour, img)
     #out4.save("justsolveit.png")
     
-    out5 = draw_mst(mst, img)
-    out5.save("out/mst.png")
     out6 = draw_lines(tour, img)
-    out6.save("out/mst_path.png")
+    out6.save("out/mst_path"+file_suffix)
 	 
     print("Done!")
     print("nn.png: nearest neighbor, no optimizations")
+    print("mst.png: mst")
     print("mst_path.png: mst to path, no optimizations")
     print("swapopt.png: mst to path, intersection optimization run")
 

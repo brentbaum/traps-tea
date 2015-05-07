@@ -161,7 +161,7 @@ def nearestNeighbor(pointList):
 		addV = vList[0]
 		for each in vList:
 			newSegment = (u, each, distance(u, each))
-			if newSegment[2] < minDist and not (nn_intersect_check(newSegment, uList)):
+			if newSegment[2] < minDist: # and not (nn_intersect_check(newSegment, uList)):
 				minDist = newSegment[2] 
 				addV = each
 		uList += [addV]
