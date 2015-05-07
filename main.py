@@ -22,6 +22,8 @@ def make_art(filename, n_points):
     ordered = nearestNeighbor(points)
     print("MST....")
     mst = mst_tour_2(points)
+    out5 = draw_mst(mst, img)
+    out5.save("mst.png")
     print("Converting to tour....")
     tour = mst_to_path(mst)
     print("Swap Intersects....")
@@ -40,13 +42,12 @@ def make_art(filename, n_points):
     #out4 = draw_lines(tour, img)
     #out4.save("justsolveit.png")
     
-    out5 = draw_mst(mst, img)
-    out5.save("mst.png")
     out6 = draw_lines(tour, img)
     out6.save("mst_path.png")
 	 
     print("Done!")
     print("nn.png: nearest neighbor, no optimizations")
+    print("mst.png: mst")
     print("mst_path.png: mst to path, no optimizations")
     print("swapopt.png: mst to path, intersection optimization run")
 
