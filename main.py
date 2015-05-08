@@ -6,7 +6,7 @@ import sys
 import time
 
 def resize(img):
-    basewidth = 150
+    basewidth = 400
     wpercent = (basewidth/float(img.size[0]))
     hsize = int((float(img.size[1])*float(wpercent)))
     return img.resize((basewidth,hsize), Image.ANTIALIAS)
@@ -14,7 +14,7 @@ def resize(img):
 
 def make_art(filename, n_points):
     img = Image.open(filename).convert('LA')
-    #img = resize(img)
+    img = resize(img)
 	
     file_suffix = str(n_points) + ".png"
     
@@ -25,7 +25,7 @@ def make_art(filename, n_points):
     print("MST....")
     mst = mst_tour_2(points)
     out5 = draw_mst(mst, img)
-    out5.save("mst" + file_suffix)
+    out5.save("out/mst.png")
     print("Converting to tour....")
     tour = mst_to_path(mst)
     print("Swap Intersects....")
@@ -36,16 +36,16 @@ def make_art(filename, n_points):
        
     print("Saving....")	
     out = draw_lines(ordered, img)
-    out.save("out/nn"+file_suffix)
+    out.save("out/nn.png")
     #out2 = draw_lines(twoopt_ordered, img)
     #out2.save("out/twooptout.png")
     out3 = draw_lines(swap_ordered, img)
-    out3.save("out/swapopt"+file_suffix)
+    out3.save("out/swapopt.png")
     #out4 = draw_lines(tour, img)
     #out4.save("justsolveit.png")
     
     out6 = draw_lines(tour, img)
-    out6.save("out/mst_path"+file_suffix)
+    out6.save("out/mst_path.png")
 	 
     print("Done!")
     print("nn.png: nearest neighbor, no optimizations")

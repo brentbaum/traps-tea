@@ -21,6 +21,7 @@ def process_file():
     global filename
     make_art(filename, n_points.get())
     img = ImageTk.PhotoImage(Image.open("out/swapopt.png"))
+    print("Finished!")
     panel = ttk.Label(img_frame, image = img)
     panel.grid(column=1, row=2, sticky=(N, W))
     panel.image = img
@@ -33,10 +34,10 @@ def setup_upload():
     upload_frame.rowconfigure(0, weight=1)
     
     n_entry = ttk.Entry(upload_frame, width=5, textvariable=n_points)
-    n_entry.grid(column=3, row=1, sticky=(W, E))
     
     ttk.Button(upload_frame, text='Choose Image File', command=get_file).grid(row=1, column=1, sticky=(W, E))
-    ttk.Button(upload_frame, text="Create TSP Art", command=lambda: process_file()).grid(column=2, row=1, sticky=W)
+    n_entry.grid(column=2, row=1, sticky=(W, E))
+    ttk.Button(upload_frame, text="Create TSP Art", command=lambda: process_file()).grid(column=3, row=1, sticky=W)
     
     for child in upload_frame.winfo_children(): child.grid_configure(padx=5, pady=5)
 
@@ -51,7 +52,7 @@ def setup_img_display():
     
     ttk.Label(img_frame)
     ttk.Button(img_frame, text="Another Image", command=lambda: back()).grid(column=1, row=3, sticky=W)
-    
+
     for child in img_frame.winfo_children(): child.grid_configure(padx=5, pady=5)
 
     img_frame.grid_remove()

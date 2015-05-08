@@ -225,7 +225,6 @@ def swap_intersect(point_list):
 						break
 			if changed:
 				break
-	print("Final Length: " + str(curr_dist))
 	return tour 
 
 
